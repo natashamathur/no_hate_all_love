@@ -2,3 +2,5 @@
 Machine learning project to detect hate speech with more accuracy.
 
 Andrea Koch, Natasha Mathur, Loren Hinkson
+
+Team Project for CAPP 30255
