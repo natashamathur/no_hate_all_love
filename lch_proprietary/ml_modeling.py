@@ -64,6 +64,7 @@ def get_classifier_params(grid_size):
     Large - for robust modeling with a large number of key classifiers
     '''
 
+
     if grid_size == 'mini':
         clfs = {
             'LogisticRegression': LogisticRegression(penalty='l1', C=1e5),
@@ -83,7 +84,7 @@ def get_classifier_params(grid_size):
         }
 
     else:
-
+   
         clfs = {
         'DecisionTree': DecisionTreeClassifier(random_state=1008),
         'LogisticRegression': LogisticRegression(penalty='l1', C=1e5),
@@ -98,7 +99,8 @@ def get_classifier_params(grid_size):
             subsample=0.5, max_depth=6, n_estimators=10),
         'NaiveBayes': GaussianNB(),
         "RandomForest": RandomForestClassifier(n_estimators=50, n_jobs=-1),
-        'KNN': KNeighborsClassifier(n_neighbors=3, n_jobs=-1)
+        'KNN': KNeighborsClassifier(n_neighbors=3, n_jobs=-1),
+        'MultinomialNB': MultinomialNB()
         }
 
         if grid_size == 'test':
@@ -115,6 +117,14 @@ def get_classifier_params(grid_size):
                 "RandomForest":{'n_estimators': [1], 'max_depth': [1], 'max_features': ['sqrt'],'min_samples_split': [10], 'random_state':[1008]},
                 "KNN":{'n_neighbors': [5],'weights': ['uniform'],'algorithm': ['auto']}
                }
+    
+    
+    
+        if grid_size == 'bayes':
+            params_dict = {
+                 "MultinomialNB": {},
+                 "NaiveBayes": {}
+                  }    
     
         if grid_size == 'small':
 
