@@ -10,10 +10,10 @@ from sklearn.linear_model import LogisticRegression, Perceptron, OrthogonalMatch
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
-import graphviz
+# import graphviz
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score, precision_score, recall_score, f1_score, roc_auc_score
-import magiclooping as mp
+# import magiclooping as mp
 
 
 
@@ -121,7 +121,7 @@ def get_classifier_params(grid_size):
             params_dict =  { 
                 "DecisionTree": {'criterion': ['gini', 'entropy'], 'max_depth': [1,5,10,20,50,100],'min_samples_split': [2,5,10], 'random_state':[1008]},
                 "LogisticRegression": { 'penalty': ['l1','l2'], 'C': [0.00001,0.001,0.1,1,10]},
-                "Bagging": {}
+                "Bagging": {},
                 "SGD": { 'loss': ['hinge','log','perceptron'], 'penalty': ['l2','l1','elasticnet']},
                 "ExtraTrees": { 'n_estimators': [10,100], 'criterion' : ['gini', 'entropy'] ,'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [2,10], 'n_jobs': [-1]},
                 "SVM":{'C' :[0.00001,0.0001,0.001,0.01,0.1,1,10],'kernel':['linear']},
@@ -239,7 +239,7 @@ def clf_loop(X_train, y_train, X_test, y_test, set_num, grid_size='mini',
                 # print("Evaluating {} models".format(name))
                 precision_100, recall_100, _ = scores_at_k(y_true_sorted, y_scores_sorted, 100.0)
 
-                results_list = [set_num, name, clf, args, precision_100 recall_100,
+                results_list = [set_num, name, clf, args, precision_100, recall_100,
                     roc_auc_score(y_test, y_scores)]
 
                 for threshold in ks:
