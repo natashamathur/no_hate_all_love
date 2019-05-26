@@ -10,10 +10,9 @@ from sklearn.linear_model import LogisticRegression, Perceptron, OrthogonalMatch
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
-import graphviz
+# import graphviz
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score, precision_score, recall_score, f1_score, roc_auc_score
-import magiclooping as mp
 
 
 
@@ -57,7 +56,7 @@ def get_classifier_params(grid_size):
     Returns initialized classifiers and paramters to loop over for three sizes of grids:
     Thanks to the Data Science for Social Good team for the recommendations!
 
-    Mini - to test a small number of classifiers across a few a few different 
+    Mini - to test a small number of classifiers across a few a few different
         parameter mixes
     Test - to test just one variation of each classifier
     Small - to test key classifiers across a few different parameter mixes
@@ -73,7 +72,7 @@ def get_classifier_params(grid_size):
         }
 
         params_dict = {
-        
+
             'LogisticRegression': { 'penalty': ['l1','l2'], 'C': [0.00001,0.001,0.1,1,10]},
             'DecisionTree': {'criterion': ['gini', 'entropy'], 'max_depth': [1,5,10,20,50,100],'min_samples_split': [2,5,10]},
             "RandomForest":{'n_estimators': [10,100], 'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [2,10], 'n_jobs': [-1], 'random_state':[1008]},
@@ -98,7 +97,8 @@ def get_classifier_params(grid_size):
             subsample=0.5, max_depth=6, n_estimators=10),
         'NaiveBayes': GaussianNB(),
         "RandomForest": RandomForestClassifier(n_estimators=50, n_jobs=-1),
-        'KNN': KNeighborsClassifier(n_neighbors=3, n_jobs=-1)
+        'KNN': KNeighborsClassifier(n_neighbors=3, n_jobs=-1),
+        'MultinomialNB': MultinomialNB()
         }
 
         if grid_size == 'test':
@@ -115,13 +115,19 @@ def get_classifier_params(grid_size):
                 "RandomForest":{'n_estimators': [1], 'max_depth': [1], 'max_features': ['sqrt'],'min_samples_split': [10], 'random_state':[1008]},
                 "KNN":{'n_neighbors': [5],'weights': ['uniform'],'algorithm': ['auto']}
                }
-    
+
+        if grid_size == 'bayes':
+            params_dict =  {
+                "MultinomialNB": {},
+                "NaiveBayes": {},
+               }
+
         if grid_size == 'small':
 
-            params_dict =  { 
+            params_dict =  {
                 "DecisionTree": {'criterion': ['gini', 'entropy'], 'max_depth': [1,5,10,20,50,100],'min_samples_split': [2,5,10], 'random_state':[1008]},
                 "LogisticRegression": { 'penalty': ['l1','l2'], 'C': [0.00001,0.001,0.1,1,10]},
-                "Bagging": {}
+                "Bagging": {},
                 "SGD": { 'loss': ['hinge','log','perceptron'], 'penalty': ['l2','l1','elasticnet']},
                 "ExtraTrees": { 'n_estimators': [10,100], 'criterion' : ['gini', 'entropy'] ,'max_depth': [5,50], 'max_features': ['sqrt','log2'],'min_samples_split': [2,10], 'n_jobs': [-1]},
                 "SVM":{'C' :[0.00001,0.0001,0.001,0.01,0.1,1,10],'kernel':['linear']},
@@ -155,7 +161,7 @@ def get_classifier_params(grid_size):
 
         elif grid_size == 'large':
 
-            params_dict = { 
+            params_dict = {
                 "DecisionTree": {'criterion': ['gini', 'entropy'],
                     'max_depth': [1,5,10,20,50,100],
                     'max_features': [None, 'sqrt','log2'],
@@ -173,7 +179,7 @@ def get_classifier_params(grid_size):
                     'min_samples_split': [2,5,10], 'n_jobs': [-1],'random_state':[1008]},
                 "KNN": {'n_neighbors': [1,5,10,25,50,100],'weights': ['uniform','distance'],'algorithm': ['auto','ball_tree','kd_tree']}
             }
-    
+
     return clfs, params_dict
 
 def develop_args(name, params_dict):
@@ -239,7 +245,7 @@ def clf_loop(X_train, y_train, X_test, y_test, set_num, grid_size='mini',
                 # print("Evaluating {} models".format(name))
                 precision_100, recall_100, _ = scores_at_k(y_true_sorted, y_scores_sorted, 100.0)
 
-                results_list = [set_num, name, clf, args, precision_100 recall_100,
+                results_list = [set_num, name, clf, args, precision_100, recall_100,
                     roc_auc_score(y_test, y_scores)]
 
                 for threshold in ks:
@@ -452,7 +458,7 @@ def scores_at_k(y_true, y_scores, k):
 
 def generate_binary_at_k(y_scores_sorted, k):
     '''
-    Attribution: Adapted from Rayid Ghani magicloops 
+    Attribution: Adapted from Rayid Ghani magicloops
     https://github.com/rayidghani/magicloops/blob/master/mlfunctions.py
     '''
     cutoff_index = int(len(y_scores_sorted) * (k / 100.0))
@@ -471,7 +477,7 @@ def joint_sort_descending(l1, l2):
 
 def plot_precision_recall_n(testing_outcome, test_pred, model_name):
     '''
-    Attribution: Adapted from Rayid Ghani magicloops 
+    Attribution: Adapted from Rayid Ghani magicloops
     https://github.com/rayidghani/magicloops/blob/master/mlfunctions.py
     '''
     from sklearn.metrics import precision_recall_curve
@@ -485,7 +491,7 @@ def plot_precision_recall_n(testing_outcome, test_pred, model_name):
         pct_above_thresh = num_above_thresh / float(number_scored)
         pct_above_per_thresh.append(pct_above_thresh)
     pct_above_per_thresh = np.array(pct_above_per_thresh)
-    
+
     plt.clf()
     fig, ax1 = plt.subplots()
     ax1.plot(pct_above_per_thresh, precision_curve, 'b')
@@ -497,7 +503,7 @@ def plot_precision_recall_n(testing_outcome, test_pred, model_name):
     ax1.set_ylim([0,1])
     ax1.set_ylim([0,1])
     ax2.set_xlim([0,1])
-    
+
     name = model_name
     plt.title(name)
     #plt.savefig(name)
