@@ -63,6 +63,7 @@ def get_classifier_params(grid_size):
     Large - for robust modeling with a large number of key classifiers
     '''
 
+
     if grid_size == 'mini':
         clfs = {
             'LogisticRegression': LogisticRegression(penalty='l1', C=1e5),
@@ -116,11 +117,13 @@ def get_classifier_params(grid_size):
                 "KNN":{'n_neighbors': [5],'weights': ['uniform'],'algorithm': ['auto']}
                }
 
+
+
         if grid_size == 'bayes':
-            params_dict =  {
-                "MultinomialNB": {},
-                "NaiveBayes": {},
-               }
+            params_dict = {
+                 "MultinomialNB": {},
+                 "NaiveBayes": {}
+                  }
 
         if grid_size == 'small':
 
