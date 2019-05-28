@@ -18,7 +18,7 @@ def write_pickle_to_s3bucket(filename, df, bucket_name):
     pickle_buffer = io.BytesIO()
     s3_resource = boto3.resource('s3')
     bucket = bucket_name
-    key = filename
+    key = filename+'.pkl'
 
     df.to_pickle(key)
     s3_resource.Object(bucket,key).put(Body=open(key, 'rb'))
