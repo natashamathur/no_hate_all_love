@@ -30,8 +30,6 @@ from scipy import sparse
 
 import time
 
-import io
-import boto3
 
 
 #################
