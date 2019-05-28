@@ -2,9 +2,43 @@ import re
 import time
 import pandas as pd
 
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, LancasterStemmer
+
+
 def print_elapsed_time(start, end, m):
     print(f"{m}...Elapsed Time:{round((end - start)/60,3)} minutes")
 
+# intialize stemmer
+ps = PorterStemmer() 
+ls = LancasterStemmer()
+
+# define stopwords
+stops = set(stopwords.words('english'))
+stops.add('')
+
+approved_stop_words = {"not", "get", "against", "haven", "haven't","aren't", 
+                       "aren", "should", "shouldn", "shouldn't", "themselves", 
+                       "them", "under", "over", 'won', "won't", "wouldn'", 
+                       "wouldn't"}
+
+stops = stops - approved_stop_words
+
+def clean_text(text, stop_ws=stops, stemmer=ps, str_output=True):
+    
+    t = text.replace("-", " ").split(" ")
+    t = [w.strip(string.punctuation) for w in t]
+    
+    if stop_ws:
+        t = [w.lower() for w in t if w not in stop_ws]
+    
+    if stemmer:
+        t = [stemmer.stem(w) for w in t]
+    
+    if str_output:
+        return ' '.join(t)
+    else:
+        return t
 
 def make_ngrams(preprocessed, n=2, str_output=True):
     '''
