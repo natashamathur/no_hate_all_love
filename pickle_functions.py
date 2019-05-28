@@ -38,7 +38,7 @@ def read_pickle(bucket_name, filename):
     Output(s):
         df - (data frame) Pandas data frame of pickle file
 
-
+    Code modified from: https://github.com/noopurrkalawatia/Dhvani/blob/master/Boto3_features.ipynb
     '''
     session = boto3.session.Session(region_name='us-east-1')
     s3client = session.client('s3')
