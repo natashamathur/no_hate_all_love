@@ -70,9 +70,9 @@ def clean_text(text, stop_ws=stops, stemmer=ps, str_output=True):
         (5) cleaned (lowercase, remove punctuation) without removing stop words.
 
     Inputs:
-        text (string) - A string of text.
+        text (string)        - A string of text.
         stemming (parameter) - either Porter or Lancaster stemming method
-        remove_sw (boolean) - True/False remove stop words
+        remove_sw (boolean)  - True/False remove stop words
 
     Outputs:
         Cleaned text per the input parameters.
@@ -95,8 +95,17 @@ def clean_text(text, stop_ws=stops, stemmer=ps, str_output=True):
 
 def make_ngrams(preprocessed, n=2, str_output=True):
     '''
-    Covert a list of preprocessed strings into ngrams of length n.
-    Should return X ngrams of X words less (n - 1).
+    This auxiliary function converts a list of preprocessed strings into
+    ngrams of length n.  Returns X ngrams of X words less (n - 1).
+
+    Input(s):
+        preprocessed - (list) List of preprocessed strings
+        n            - (int) Length of n-gram
+        str_output   - (boolean)
+
+    Output(s):
+        Either a list or string of ngrams
+
     '''
     ngrams_tuples = []
 
