@@ -15,3 +15,5 @@ Python:
   - Pytorch
   - scikit-learn
   - pandas
+  - NLTK
+  
