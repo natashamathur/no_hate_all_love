@@ -5,7 +5,7 @@ import pandas as pd
 import boto3.session
 
 
-def pickle_to_s3bucket(filename, df, bucket_name):
+def write_pickle_to_s3bucket(filename, df, bucket_name):
     '''
     Pickles a data frame and sends to AWS s3 bucket.
 
