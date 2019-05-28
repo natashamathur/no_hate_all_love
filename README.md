@@ -16,7 +16,11 @@ Python:
   - scikit-learn
   - pandas
   - NLTK
-  
+Amazon Web Services:
+  - S3 buckets
+  - SageMaker
+
 ### Files
-- 
-  
+- feature_generation_functions.py:  Contains modules and functions used to generate text and numerical features for model. (186 lines)
+- pickle_functions.py:  Contains modules and functions used to read/write data from/to pickle files hosted in AWS s3 bucket. (50 lines)
+- feature_generation.ipynb:  Python 3 notebook used to run functions from feature_generation_functions.py and pickle_functions.py.  Generates features, pickles data frames, and sends to s3 bucket. (160 lines)
