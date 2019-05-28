@@ -2,12 +2,14 @@
 #   MODULES   #
 ###############
 
-
+import string
+import nltk
 import pandas as pd
 import seaborn as sns
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, LancasterStemmer
-# nltk.download("stopwords")
+
+nltk.download("stopwords")
 
 import string
 import re
@@ -20,8 +22,10 @@ pd.options.display.float_format = '{:20.4f}'.format
 import sklearn
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import GaussianNB
+
 from sklearn.linear_model import SGDClassifier
 
 import numpy as np
