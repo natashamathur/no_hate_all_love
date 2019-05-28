@@ -5,7 +5,7 @@ In this project, we apply machine learning to unstructured data to detect hate s
 ### Goal
 Our goal is to classify comments as hateful or not hateful. Historically, attempts to do similar classifications mis-identify comments that mention identify groups that could be attacked with hate speech as hateful. We hope to develop more nuanced models that correctly categorize both hateful speech and non-hateful identity references.
 
-### Tem Members:
+### Team Members
 - Andrea Koch
 - Natasha Mathur
 - Loren Hinkson
@@ -16,4 +16,7 @@ Python:
   - scikit-learn
   - pandas
   - NLTK
+  
+### Files
+- 
   
