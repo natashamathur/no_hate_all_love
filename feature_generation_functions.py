@@ -145,16 +145,22 @@ def generate_features(df):
             (1) split - (list) Comment string split into a list of words
             (2) cleaned_w_stopwords_str - (string) Comment with punctuation removed
             (3) cleaned_w_stopwords - (list) Comment with punctuation removed, split into list of words
-            (4) cleaned_no_stem_str - (string) Comment with stopwords removed
-            (5) cleaned_no_stem - (list) Comment with stopwords removed, split into list of words
-            (6) cleaned_porter_str
-            (7) cleaned_porter
-            (8) cleaned_lancaster_str
-            (9) cleaned_lancaster
-            (10) bigrams_unstemmed
-            (11) perc_upper
-            (12) num_exclam
-            (13) num_words
+            (4) cleaned_no_stem_str - (string) Comment with stopwords and punctuation removed, lowercased
+            (5) cleaned_no_stem - (list) Comment with stopwords and punctuation removed, lowercased, 
+                                   and split into list of words
+            (6) cleaned_porter_str - (string) Comment with stopwords and punctuation removed, lowercased, 
+                                      and Porter stemmed
+            (7) cleaned_porter - (list) Comment with stopwords and punctuation removed, lowercased, 
+                                  Porter stemmed, and split into list of words
+            (8) cleaned_lancaster_str - (string) Comment with stopwords and punctuation removed, lowercased, 
+                                         and Lancaster stemmed
+            (9) cleaned_lancaster - (list) Comment with stopwords and punctuation removed, lowercased, 
+                                    Lancaster stemmed, and split into list of words
+            (10) bigrams_unstemmed - Comment with stopwords and punctuation removed, lowercased, 
+                                     then converted into bigrams
+            (11) perc_upper - Percent of uppercase letters in comment
+            (12) num_exclam - Count of exclamation points in comment
+            (13) num_words - Count of words in comment
 
     '''
     start_time = time.perf_counter()
