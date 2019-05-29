@@ -60,7 +60,7 @@ stops = stops - approved_stop_words
 
 def clean_text(text, stop_ws=stops, stemmer=ps, str_output=True):
     '''
-    This auxiliary function cleans text.
+    This auxiliary function cleans text.  Fed to the generate_features function.
 
     Methods used for cleaning are:
         (1) transform string of text to list of words,
@@ -97,11 +97,12 @@ def make_ngrams(preprocessed, n=2, str_output=True):
     '''
     This auxiliary function converts a list of preprocessed strings into
     ngrams of length n.  Returns X ngrams of X words less (n - 1).
+    Fed to the generate_features function.
 
     Input(s):
         preprocessed - (list) List of preprocessed strings
         n            - (int) Length of n-gram
-        str_output   - (boolean)
+        str_output   - (boolean) output as a string (true) or list (false)
 
     Output(s):
         Either a list or string of ngrams
@@ -125,11 +126,43 @@ def make_ngrams(preprocessed, n=2, str_output=True):
 
 
 def print_elapsed_time(start, end, m):
+    '''
+    This auxiliary function prints elapsed time.  Fed to the generate_features function.
+    '''
     print(f"{m}...Elapsed Time:  {round((end - start)/60,3)} minutes")
 
 
 
 def generate_features(df):
+    '''
+    This function generates text and numerical features for models.  
+    
+    Input(s):
+        df - (data frame) raw data
+    
+    Output(s):
+        df - (data frame) returns the data frame with added features:
+            (1) split - (list) Comment string split into a list of words
+            (2) cleaned_w_stopwords_str - (string) Comment with punctuation removed
+            (3) cleaned_w_stopwords - (list) Comment with punctuation removed, split into list of words
+            (4) cleaned_no_stem_str - (string) Comment with stopwords and punctuation removed, lowercased
+            (5) cleaned_no_stem - (list) Comment with stopwords and punctuation removed, lowercased, 
+                                   and split into list of words
+            (6) cleaned_porter_str - (string) Comment with stopwords and punctuation removed, lowercased, 
+                                      and Porter stemmed
+            (7) cleaned_porter - (list) Comment with stopwords and punctuation removed, lowercased, 
+                                  Porter stemmed, and split into list of words
+            (8) cleaned_lancaster_str - (string) Comment with stopwords and punctuation removed, lowercased, 
+                                         and Lancaster stemmed
+            (9) cleaned_lancaster - (list) Comment with stopwords and punctuation removed, lowercased, 
+                                    Lancaster stemmed, and split into list of words
+            (10) bigrams_unstemmed - Comment with stopwords and punctuation removed, lowercased, 
+                                     then converted into bigrams
+            (11) perc_upper - Percent of uppercase letters in comment
+            (12) num_exclam - Count of exclamation points in comment
+            (13) num_words - Count of words in comment
+
+    '''
     start_time = time.perf_counter()
 
     df['split'] = df["comment_text"].apply(lambda x: x.split(" "))
