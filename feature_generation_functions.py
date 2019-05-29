@@ -3,35 +3,35 @@
 ###############
 
 import string
-import nltk
+# import nltk
 import pandas as pd
-import seaborn as sns
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, LancasterStemmer
-
-nltk.download("stopwords")
-
-import string
+# import seaborn as sns
+# from nltk.corpus import stopwords
+# from nltk.stem import PorterStemmer, LancasterStemmer
+#
+# nltk.download("stopwords")
+#
+# import string
 import re
-
-import warnings
-warnings.filterwarnings('ignore')
-import matplotlib.pyplot as plt
-pd.options.display.float_format = '{:20.4f}'.format
-
-import sklearn
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.naive_bayes import GaussianNB
-
-from sklearn.linear_model import SGDClassifier
-
+#
+# import warnings
+# warnings.filterwarnings('ignore')
+# import matplotlib.pyplot as plt
+# pd.options.display.float_format = '{:20.4f}'.format
+#
+# import sklearn
+# from sklearn.feature_extraction.text import CountVectorizer
+# from sklearn.feature_extraction.text import TfidfTransformer
+#
+# from sklearn.naive_bayes import MultinomialNB
+# from sklearn.naive_bayes import GaussianNB
+#
+# from sklearn.linear_model import SGDClassifier
+#
 import numpy as np
-
-from scipy import sparse
-
+#
+# from scipy import sparse
+#
 import time
 
 
@@ -135,28 +135,28 @@ def print_elapsed_time(start, end, m):
 
 def generate_features(df):
     '''
-    This function generates text and numerical features for models.  
-    
+    This function generates text and numerical features for models.
+
     Input(s):
         df - (data frame) raw data
-    
+
     Output(s):
         df - (data frame) returns the data frame with added features:
             (1) split - (list) Comment string split into a list of words
             (2) cleaned_w_stopwords_str - (string) Comment with punctuation removed
             (3) cleaned_w_stopwords - (list) Comment with punctuation removed, split into list of words
             (4) cleaned_no_stem_str - (string) Comment with stopwords and punctuation removed, lowercased
-            (5) cleaned_no_stem - (list) Comment with stopwords and punctuation removed, lowercased, 
+            (5) cleaned_no_stem - (list) Comment with stopwords and punctuation removed, lowercased,
                                    and split into list of words
-            (6) cleaned_porter_str - (string) Comment with stopwords and punctuation removed, lowercased, 
+            (6) cleaned_porter_str - (string) Comment with stopwords and punctuation removed, lowercased,
                                       and Porter stemmed
-            (7) cleaned_porter - (list) Comment with stopwords and punctuation removed, lowercased, 
+            (7) cleaned_porter - (list) Comment with stopwords and punctuation removed, lowercased,
                                   Porter stemmed, and split into list of words
-            (8) cleaned_lancaster_str - (string) Comment with stopwords and punctuation removed, lowercased, 
+            (8) cleaned_lancaster_str - (string) Comment with stopwords and punctuation removed, lowercased,
                                          and Lancaster stemmed
-            (9) cleaned_lancaster - (list) Comment with stopwords and punctuation removed, lowercased, 
+            (9) cleaned_lancaster - (list) Comment with stopwords and punctuation removed, lowercased,
                                     Lancaster stemmed, and split into list of words
-            (10) bigrams_unstemmed - Comment with stopwords and punctuation removed, lowercased, 
+            (10) bigrams_unstemmed - Comment with stopwords and punctuation removed, lowercased,
                                      then converted into bigrams
             (11) perc_upper - Percent of uppercase letters in comment
             (12) num_exclam - Count of exclamation points in comment
