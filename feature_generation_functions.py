@@ -133,7 +133,7 @@ def print_elapsed_time(start, end, m):
 
 
 
-def generate_features(df):
+def generate_all_features(df):
     '''
     This function generates text and numerical features for models.
 
@@ -221,6 +221,50 @@ def generate_features(df):
     df['num_upper_words'] = df["split"].apply(lambda x: sum(map(str.isupper, x)) )
     ct_upper_time = time.perf_counter()
     print_elapsed_time(stops_pct_time, ct_upper_time, m="Count uppercase words")
+
+    print()
+    print("DONE GENERATING FEATURES")
+
+    return df
+
+
+
+
+def generate_NB_SVM_features(df):
+    '''
+    This function generates text and numerical features for models.
+
+    Input(s):
+        df - (data frame) raw data
+
+    Output(s):
+        df - (data frame) returns the data frame with added features:
+            (1) split - (list) Comment string split into a list of words
+            (2) cleaned_w_stopwords_str - (string) Comment with punctuation removed
+            (3) cleaned_no_stem_str - (string) Comment with stopwords and punctuation removed, lowercased
+            (4) cleaned_porter_str - (string) Comment with stopwords and punctuation removed, lowercased,
+                                      and Porter stemmed
+            (5) cleaned_lancaster_str - (string) Comment with stopwords and punctuation removed, lowercased,
+                                         and Lancaster stemmed
+            
+    '''
+    start_time = time.perf_counter()
+
+    df['cleaned_w_stopwords_str'] = df["comment_text"].apply(clean_text,args=(None,None,True),)
+    with_stopwords = time.perf_counter()
+    print_elapsed_time(start_time, with_stopwords, m="Cleaned with stopwords")
+
+    df['cleaned_no_stem_str'] = df["comment_text"].apply(clean_text,args=(stops,None, True),)
+    without_stopwords = time.perf_counter()
+    print_elapsed_time(with_stopwords, without_stopwords, m="Cleaned without stopwords")
+
+    df['cleaned_porter_str'] = df["comment_text"].apply(clean_text,args=(stops,ps,True),)
+    porter_time = time.perf_counter()
+    print_elapsed_time(without_stopwords, porter_time, m="Stemmed (Porter)")
+
+    df['cleaned_lancaster_str'] = df["comment_text"].apply(clean_text,args=(stops,ls,True),)
+    lancaster_time = time.perf_counter()
+    print_elapsed_time(porter_time, lancaster_time, m="Stemmed (Lancaster)")
 
     print()
     print("DONE GENERATING FEATURES")
