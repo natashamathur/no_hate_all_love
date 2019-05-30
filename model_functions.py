@@ -98,55 +98,75 @@ def run_model(model_df, train_perc=.80,  model_type = "SVM",
 
 
 
-
-
-
-def get_metrics(output, should_print=True, round_to=3):
+def get_metrics(output, should_print=True, round_to=3, detailed = False, label_col="y_test", score_col="predicted"):
     '''
     This function returns the model's metrics.
 
     '''
     metrics = {}
-    targets = output[output.y_test == 1]
-    nontargets = output[output.y_test == 0]
-
+    targets = output[output[label_col] == 1]
+    nontargets = output[output[label_col] == 0]
+                
     dfs = [output, targets, nontargets]
     labels = ["Overall", "Target", "Non-Target"]
-
+    
     for i in range(len(dfs)):
 
         df, label = dfs[i], labels[i]
+        num_in_sample = df.shape[0]
         if label == "Non-Target":
             pos_label = 0
         else:
             pos_label = 1
-
+        
         metrics[label] = {}
-
-
-        accuracy = round(accuracy_score(df.y_test, df.predicted), round_to)
+        
+        accuracy = round(accuracy_score(df[label_col], df[score_col]), round_to)
         metrics[label]['Accuracy'] = accuracy
-
-        precision = round(precision_score(df.y_test, df.predicted, pos_label=pos_label), round_to)
+        
+        precision = round(precision_score(df[label_col], df[score_col], pos_label=pos_label), round_to)
         metrics[label]['Precision'] = precision
 
-        recall = round(recall_score(df.y_test, df.predicted, pos_label=pos_label), round_to)
+        recall = round(recall_score(df[label_col], df[score_col], pos_label=pos_label), round_to)
         metrics[label]['Recall'] = recall
-
-        f1 = round(f1_score(df.y_test, df.predicted, pos_label=pos_label), round_to)
+        
+        f1 = round(f1_score(df[label_col], df[score_col], pos_label=pos_label), round_to)
         metrics[label]['F1'] = f1
 
         if label == "Overall":
-            roc_auc = round(roc_auc_score(df.y_test, df.predicted), round_to)
+            roc_auc = round(roc_auc_score(df[label_col], df[score_col]), round_to)
             metrics[label]['ROC_AUC'] = roc_auc
-
+            
         if should_print == True:
+            print("Group Size: {}".format(num_in_df))
             print("{} Accuracy: {}".format(label, accuracy))
             print("{} Precision: {}".format(label, precision))
             print("{} Recall: {}".format(label, recall))
             print("{} F1 Score: {}".format(label, f1))
             if label == "Overall":
-                print("ROC_AUC: {}".format(label, roc_auc))
+                print("ROC_AUC: {}".format(roc_auc))
             print()
+            
+    if detailed == True:
+        
+        identities = output[output.identity_attack > .5]
+        obscenity = output[output.obscene > .5]
+        insults = output[output.insult > .5]
+        threats = output[output.threat > .5]
 
+        detail_dfs = [identities, obscenity, insults, threats]
+        detail_labels = ["Strong Identity", "Obscenity", "Insults", "Threats"]
+        
+        for i in range(len(detail_dfs)):
+            df, label = detail_dfs[i], detail_labels[i]
+            num_in_sample = df.shape[0]
+            metrics[label] = {}
+        
+            f1 = round(f1_score(df[label_col], df[score_col], pos_label=pos_label), round_to)
+            metrics[label]['F1'] = f1
+            
+            if should_print == True:
+           
+                print("{} Samples: {}\nF1 Score: {}".format(label, num_in_sample, f1))
+            
     return metrics
