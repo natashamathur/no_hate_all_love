@@ -1,9 +1,18 @@
+###############
+#   MODULES   #
+###############
+
 import io
 import boto3
 import _pickle as cPickle
 import pandas as pd
 import boto3.session
 
+
+
+#################
+#   FUNCTIONS   #
+#################
 
 def write_pickle_to_s3bucket(filename, df, bucket_name):
     '''
