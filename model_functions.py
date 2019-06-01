@@ -94,7 +94,7 @@ def run_model(model_df, train_perc=.80,  model_type = "SVM",
     if see_inside == True:
         return clf, output, X_all_counts, X_all_tfidf
     else:
-        return clf, output
+        return clf, output, fitted_vectorizer
 
 
 
@@ -170,3 +170,18 @@ def get_metrics(output, should_print=True, round_to=3, detailed = False, label_c
                 print("{} Samples: {}\nF1 Score: {}".format(label, num_in_sample, f1))
             
     return metrics
+  
+  def run_model_test(model_df, clf, vectorizer, train_perc=.80,  model_type = "MultiNB", 
+             see_inside=False, comments="comment_text",
+             target='toxicity_category'):
+
+
+    # calculating frequencies
+    X_all_tfidf = vectorizer.transform(model_df[comments].astype('U'))
+        
+    predicted = clf.predict(X_all_tfidf)
+    
+    output = model_df
+    output['predicted'] = predicted
+    
+    return output
