@@ -122,6 +122,7 @@ def get_metrics(should_print, detailed, output, round_to):
                         f1_score, AUC-ROC
 
     '''
+    round_to = 3
     metrics = {}
     targets = output[output.y_test == 1]
     nontargets = output[output.y_test == 0]
