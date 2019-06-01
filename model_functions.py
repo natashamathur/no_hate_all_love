@@ -106,7 +106,7 @@ def run_model(train_perc, target, see_inside, comments, model_df, model_type):
 
 
 
-def get_metrics(should_print, detailed, output):
+def get_metrics(should_print, detailed, output, round_to):
     '''
     This function returns the model's metrics for various subsets of data.
 
@@ -115,6 +115,7 @@ def get_metrics(should_print, detailed, output):
         should_print - (boolean) Print out results
         detailed     - (boolean) Whether it should include metrics for identity,
                             obscenity, threats, insults
+        round_to     - (integer) number of decimals to round to
 
     Output(s):
         metrics - (data frame) metric results i.e. accuracy, precision, recall,
