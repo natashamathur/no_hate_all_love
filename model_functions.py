@@ -34,8 +34,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 #################
 
 
-def run_model(model_df, train_perc=.80, model_type, see_inside=False,
-                comments, target='toxicity_category'):
+def run_model(train_perc=.80, target='toxicity_category', see_inside=False,
+                comments, model_df, model_type):
     '''
     This function runs a single machine learning model as per the specified
     parameters.
@@ -107,7 +107,7 @@ def run_model(model_df, train_perc=.80, model_type, see_inside=False,
 
 
 
-def get_metrics(output, should_print=True, detailed = False):
+def get_metrics(should_print=True, detailed = False, output):
     '''
     This function returns the model's metrics for various subsets of data.
 
@@ -197,8 +197,8 @@ def get_metrics(output, should_print=True, detailed = False):
 
 
 
-def run_model_test(model_df, clf, vectorizer,
-                   comments="comment_text", target='toxicity_category'):
+def run_model_test(comments="comment_text", target='toxicity_category', 
+                   model_df, clf, vectorizer):
     '''
 
     Input(s):
