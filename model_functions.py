@@ -35,7 +35,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 
 def run_model(model_df, train_perc=.80, model_type, see_inside=False,
-                comments="comment_text", target='toxicity_category'):
+                comments, target='toxicity_category'):
     '''
     This function runs a single machine learning model as per the specified
     parameters.
@@ -220,6 +220,7 @@ def run_model_test(model_df, clf, vectorizer,
 
     output = model_df
     output['predicted'] = predicted
-    output['y_test'] = model_df[target].values
+    output['y_test'] = model_df[target]
+    print(output.columns)
 
     return output
