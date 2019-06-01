@@ -34,9 +34,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 #################
 
 
-def run_model(model_df, train_perc=.80,  model_type = "SVM",
-             see_inside=False, comments="comment_text",
-             target='toxicity_category'):
+def run_model(model_df, train_perc=.80, model_type = "SVM", see_inside=False, comments="comment_text", target='toxicity_category'):
     '''
     This function runs a single machine learning model as per the specified parameters.
 
