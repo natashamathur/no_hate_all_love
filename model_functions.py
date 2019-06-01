@@ -34,7 +34,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 #################
 
 
-def run_model(model_df, train_perc=.80, model_type = "SVM", see_inside=False, comments="comment_text", target='toxicity_category'):
+def run_model(model_df, train_perc=.80, model_type = "SVM", see_inside=False, comments="comment_text", 
+              target='toxicity_category'):
     '''
     This function runs a single machine learning model as per the specified parameters.
 
@@ -169,9 +170,8 @@ def get_metrics(output, should_print=True, round_to=3, detailed = False, label_c
             
     return metrics
   
-  def run_model_test(model_df, clf, vectorizer, train_perc=.80,  model_type = "MultiNB", 
-             see_inside=False, comments="comment_text",
-             target='toxicity_category'):
+def run_model_test(model_df, clf, vectorizer, train_perc=.80,  model_type = "MultiNB", see_inside=False, 
+                   comments="comment_text", target='toxicity_category'):
 
 
     # calculating frequencies
