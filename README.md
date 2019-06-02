@@ -22,8 +22,11 @@ Amazon Web Services:
   - [SageMaker](https://aws.amazon.com/sagemaker/)
 
 ### Files & Notebooks
-- feature_generation_functions.py:  Contains modules and functions used to generate text and numerical features for model. (229 lines)
-- pickle_functions.py:  Contains modules and functions used to read/write data from/to pickle files hosted in AWS s3 bucket. (50 lines)
+- feature_generation_functions.py:  Contains modules and functions used to generate text and numerical features for model. (273 lines)
+- pickle_functions.py:  Contains modules and functions used to read/write data from/to pickle files hosted in AWS s3 bucket. (60 lines)
 - feature_generation.ipynb:  Python 3 notebook used to run functions from feature_generation_functions.py and pickle_functions.py.  Generates features, pickles data frames, and sends to s3 bucket. (160 lines)
+- model_functions.py: Contains modules and functions to generate and test Naive Bayes and SVM models; run metrics on models. (226 lines)
+- stepping_stones:
+  - NB_iter1
 
 If there are any issues opening a notebook, please enter the link at the following site: https://nbviewer.jupyter.org/
