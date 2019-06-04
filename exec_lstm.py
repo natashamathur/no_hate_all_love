@@ -21,22 +21,27 @@ import torch.nn.functional as F
 import torch.utils.data as tud
 from collections import Counter, OrderedDict
 from sklearn.model_selection import train_test_split
-
-
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-
-nltk.download('stopwords')
-from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, LancasterStemmer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from torch.nn.utils.rnn import pad_sequence, pack_sequence, pad_packed_sequence, pack_padded_sequence
 
+try:
+    from nltk.corpus import stopwords
+except:
+    try:
+        nltk.download('stopwords')
+        from nltk.corpus import stopwords
+    except SSLError:
+        _create_unverified_https_context = ssl._create_unverified_context
+        nltk.download('stopwords')
+        from nltk.corpus import stopwords
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+        nltk.download('stopwords')
+        from nltk.corpus import stopwords
 
 # intialize stemmer
 ps = PorterStemmer()
@@ -110,22 +115,8 @@ def rebalance_data(train_sample, rebalance_ratios=[0.35, 0.5, 0.6, 0.65, 0.75]):
         # print(rebalanced_df.head())
         all_rebalanced.append(rebalanced_df)
 
-    # prepared_35 = toxic.append(nontoxic.sample(TOTAL_TOXIC*3))
-    # prepared_35 = prepared_35.sample(frac=1).reset_index(drop=True)
-    #
-    # prepared_50 = toxic.append(toxic).append(nontoxic.sample(TOTAL_TOXIC*2))
-    # prepared_50 = prepared_50.sample(frac=1).reset_index(drop=True)
-    #
-    # prepared_60 = toxic.append(toxic).append(toxic).append(nontoxic.sample(TOTAL_TOXIC))
-    # prepared_60 = prepared_60.sample(frac=1).reset_index(drop=True)
-    #
-    # prepared_65 = toxic.append(toxic).append(toxic).append(nontoxic.sample(TOTAL_TOXIC))
-    # prepared_65 = prepared_65.sample(frac=1).reset_index(drop=True)
-
     # random df
     random_df = train_sample.sample(n=TOTAL_SAMPLES, random_state=1008)
-
-    # assert len(prepared_35) == len(prepared_50) == len(prepared_60) == len(prepared_65)
 
     print(f"Rebalanced dfs created...")
 
@@ -134,7 +125,7 @@ def rebalance_data(train_sample, rebalance_ratios=[0.35, 0.5, 0.6, 0.65, 0.75]):
 
 
 
-def clean_text(text, stop_ws=stops, stemmer=ps, str_output=True):
+def tokenizer(text, stop_ws=stops, stemmer=ps, str_output=True):
 
     t = text.replace("-", " ").split(" ")
     t = [w.strip(string.punctuation) for w in t]
@@ -188,7 +179,7 @@ def get_metrics(output, should_print=True, detailed = False, label_col="y_test",
         metrics[label]['F1'] = f1
 
         if label == "Overall":
-            roc_auc = round(roc_auc_score(df[label_col], df[score_col]), round_to)
+            roc_auc = roc_auc_score(df[label_col], df[score_col])
             metrics[label]['ROC_AUC'] = roc_auc
 
         if should_print == True:
@@ -216,7 +207,7 @@ def get_metrics(output, should_print=True, detailed = False, label_col="y_test",
             num_in_sample = df.shape[0]
             metrics[label] = {}
 
-            f1 = round(f1_score(df[label_col], df[score_col], pos_label=pos_label), round_to)
+            f1 = f1_score(df[label_col], df[score_col], pos_label=pos_label)
             metrics[label]['F1'] = f1
 
             if should_print == True:
@@ -339,9 +330,14 @@ class LSTMModel(nn.Module):
         argmaxes = []
         for vec in X_vec:
             results = self.forward(vec.unsqueeze(0))
+#             print(results)
+#             print("as calced", results.size())
+#             print("view -1", results.view(-1))
+#             print(results.view(-1).size())
 
-            _, indices = torch.max(results.view(-1, results.size()[-1]), argmax=1)
-
+#             values, indices = torch.max(results.view(-1, results.size()[-1]).squeeze(0), 0)
+            indices = torch.argmax(results.view(-1), dim=0)
+#             print(indices)
         # indicies works cleanest --> for multiclass, look up in self.label_to_idx
             argmaxes.append(indices.item())
 
@@ -416,7 +412,7 @@ class LSTMModel(nn.Module):
                 # Update parameters
                 self.optimizer.step()
 
-            thresholds: {
+            thresholds= {
                 5000: 1000,
                 1000: 100,
                 100: 10,
@@ -459,7 +455,7 @@ class LSTMModel(nn.Module):
         print(f"Highest F1 Score: {self.highest_f1}, Epoch: {self.best_epoch}")
 
         if savestate:
-            savepath = savestate + f'_epoch{highest_epoch}.pt'
+            savepath = savestate + f'_epoch{self.best_epoch}.pt'
             torch.save(best_model_state_dict, savepath)
 
         return results_df, best_model_state_dict
@@ -470,13 +466,13 @@ def main(filepath="jigsaw_toxic/"):
 
     # df = load_label(filepath)
     #
-    # df['cleaned_no_stem'] = df["comment_text"].apply(clean_text,args=(stops,None,False),)
+    # df['cleaned_no_stem'] = df["comment_text"].apply(tokenizer,args=(stops,None,False),)
     #
     # rebalance_dict = {0: 35, 1: 50, 2: 60, 3: 65, 4: .75, 5: 'random'}
     #
     # data_proportions = [0.2, 0.3, 0.4, 0.5, 0.6, 0.75]
     #
-    # test_ratio = 0.2
+    test_ratio = 0.2
     #
     # for p, proportion in enumerate(data_proportions):
     #
@@ -486,12 +482,12 @@ def main(filepath="jigsaw_toxic/"):
     #
         # for i, p_df in enumerate([prepared_35, prepared_50, prepared_60, prepared_65, prepared_75, random_df]):
         #     model_name= f'{int(data_proportions[p]*100)}pct_model_{rebalance_dict[i]}toxic'
-        #     val_set.to_pickle("jigsaw_toxic/train_test/" + model_name + "_val.pkl")
-    #         test_set.to_pickle("jigsaw_toxic/train_test/" + model_name + "_test.pkl")
-    #         p_df.to_pickle("jigsaw_toxic/train_test/" + model_name + "_train.pkl")
+        #     val_set.to_pickle("jigsaw_toxic/" + model_name + "_val.pkl")
+    #         test_set.to_pickle("jigsaw_toxic/" + model_name + "_test.pkl")
+    #         p_df.to_pickle("jigsaw_toxic/" + model_name + "_train.pkl")
 
     filelist = []
-    for file in os.listdir(filepath + "train_test/"):
+    for file in os.listdir(filepath):
         if file.endswith(".pkl"):
             if "_test" not in file:
                 filelist.append(file)
@@ -502,7 +498,7 @@ def main(filepath="jigsaw_toxic/"):
     for x in filelist:
         (train_list if "_train" in x else val_list).append(x)
 
-    for p_df, val_set in zip(train_list, val_list)
+    for p_df, val_set in zip(train_list, val_list):
         model_name = os.path.splitext(p_df)[0].replace("_train", "")
         p_df = pd.read_pickle(filepath + p_df)
         val_set = pd.read_pickle(filepath + val_set)
@@ -520,6 +516,7 @@ def main(filepath="jigsaw_toxic/"):
                                   num_layers=1, embed_dim=50, batch_size=1,
                                   dropout=0, num_classes=2)
         if USE_CUDA:
+            torch.cuda.init()
             lstm_model = lstm_model.cuda()
 
         lstm_model.train()

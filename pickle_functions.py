@@ -4,11 +4,11 @@
 
 import io
 import boto3
+import gcsfs
+import pickle
 import _pickle as cPickle
 import pandas as pd
 import boto3.session
-
-
 
 #################
 #   FUNCTIONS   #
@@ -56,4 +56,31 @@ def read_pickle(bucket_name, filename):
 
     body_string = response['Body'].read()
     df = cPickle.loads(body_string)
+    return df
+
+
+def pickle_to_gcs(df, filename, bucket_name="no-hate", directory=None):
+    pickle_buffer = io.BytesIO()
+    fs = gcsfs.GCSFileSystem(project=project_id)
+    df.to_pickle(filename)
+
+    if directory:
+        directory = directory + "/"
+    else:
+        directory = ""
+
+    with fs.open(f"{bucket_name}/{directory}{filename}", "wb") as handle:
+        pickle.dump(df, handle)
+
+
+def load_pickle_from_gcs(filename, bucket_name="no-hate",  directory=None):
+    fs = gcsfs.GCSFileSystem(project=project_id)
+
+    if not directory:
+        directory = directory + "/"
+    else:
+        directory = ""
+
+    with fs.open(f"{bucket_name}/{directory}{filename}", "rb") as handle:
+        df = pickle.load(handle)
     return df
