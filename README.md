@@ -7,8 +7,8 @@ Our goal is to classify comments as hateful or not hateful. Historically, attemp
 
 ### Team Members
 - [Andrea Koch](https://github.com/kochandrea)
-- [Natasha Mathur](https://github.com/lorenh516)
-- [Loren Hinkson](https://github.com/natashamathur)
+- [Natasha Mathur](https://github.com/natashamathur)
+- [Loren Hinkson](https://github.com/lorenh516)
 
 ### Technologies
 Python:
