@@ -37,5 +37,10 @@ Amazon Web Services:
   - [SVM_iter1.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter1.ipynb) (657 lines)
   - [SVM_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter2.ipynb) (691 lines)
   - [SVM iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter3.ipynb) (644 lines)
+#### Final Models
+- [NB_final.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/NB_final.ipynb) Naive Bayes Model (698 lines)
+- [SVM_final.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/SVM_final.ipynb) Support Vector Machines Model (1818 lines)
+- [neural_network.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/neural_network.ipynb) Two Layer Neural Network (536 lines)
+
 
 If there are any issues opening a notebook, please enter the link at the following site: https://nbviewer.jupyter.org/
