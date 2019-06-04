@@ -30,14 +30,18 @@ try:
     from nltk.corpus import stopwords
 except:
     try:
+        nltk.download('stopwords')
+        from nltk.corpus import stopwords
+    except SSLError:
         _create_unverified_https_context = ssl._create_unverified_context
+        nltk.download('stopwords')
+        from nltk.corpus import stopwords
     except AttributeError:
         pass
     else:
         ssl._create_default_https_context = _create_unverified_https_context
-
-    nltk.download('stopwords')
-    from nltk.corpus import stopwords
+        nltk.download('stopwords')
+        from nltk.corpus import stopwords
 
 # intialize stemmer
 ps = PorterStemmer()
@@ -111,22 +115,8 @@ def rebalance_data(train_sample, rebalance_ratios=[0.35, 0.5, 0.6, 0.65, 0.75]):
         # print(rebalanced_df.head())
         all_rebalanced.append(rebalanced_df)
 
-    # prepared_35 = toxic.append(nontoxic.sample(TOTAL_TOXIC*3))
-    # prepared_35 = prepared_35.sample(frac=1).reset_index(drop=True)
-    #
-    # prepared_50 = toxic.append(toxic).append(nontoxic.sample(TOTAL_TOXIC*2))
-    # prepared_50 = prepared_50.sample(frac=1).reset_index(drop=True)
-    #
-    # prepared_60 = toxic.append(toxic).append(toxic).append(nontoxic.sample(TOTAL_TOXIC))
-    # prepared_60 = prepared_60.sample(frac=1).reset_index(drop=True)
-    #
-    # prepared_65 = toxic.append(toxic).append(toxic).append(nontoxic.sample(TOTAL_TOXIC))
-    # prepared_65 = prepared_65.sample(frac=1).reset_index(drop=True)
-
     # random df
     random_df = train_sample.sample(n=TOTAL_SAMPLES, random_state=1008)
-
-    # assert len(prepared_35) == len(prepared_50) == len(prepared_60) == len(prepared_65)
 
     print(f"Rebalanced dfs created...")
 
@@ -344,7 +334,7 @@ class LSTMModel(nn.Module):
 #             print("as calced", results.size())
 #             print("view -1", results.view(-1))
 #             print(results.view(-1).size())
-            
+
 #             values, indices = torch.max(results.view(-1, results.size()[-1]).squeeze(0), 0)
             indices = torch.argmax(results.view(-1), dim=0)
 #             print(indices)
