@@ -27,6 +27,6 @@ Amazon Web Services:
 - feature_generation.ipynb:  Python 3 notebook used to run functions from feature_generation_functions.py and pickle_functions.py.  Generates features, pickles data frames, and sends to s3 bucket. (160 lines)
 - model_functions.py: Contains modules and functions to generate and test Naive Bayes and SVM models; run metrics on models. (226 lines)
 - stepping_stones:
-  - NB_iter1
+  - [Initial_Models_Exploration.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/Initial_Models_Exploration.ipynb) 1697 lines
 
 If there are any issues opening a notebook, please enter the link at the following site: https://nbviewer.jupyter.org/
