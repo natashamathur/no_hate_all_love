@@ -11,6 +11,10 @@ __pycache__/
 # Data
 data/
 data/*
+lstm_logs/
+lstm_model_states/
+dataset_pkls/
+reference/
 
 # Distribution / packaging
 .Python
