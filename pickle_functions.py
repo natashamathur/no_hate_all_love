@@ -4,7 +4,7 @@
 
 import io
 import boto3
-import gcsfs
+# import gcsfs
 import pickle
 import _pickle as cPickle
 import pandas as pd
