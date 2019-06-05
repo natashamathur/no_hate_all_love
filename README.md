@@ -7,8 +7,8 @@ Our goal is to classify comments as hateful or not hateful. Historically, attemp
 
 ### Team Members
 - [Andrea Koch](https://github.com/kochandrea)
-- [Natasha Mathur](https://github.com/lorenh516)
-- [Loren Hinkson](https://github.com/natashamathur)
+- [Natasha Mathur](https://github.com/natashamathur)
+- [Loren Hinkson](https://github.com/lorenh516)
 
 ### Technologies
 Python:
@@ -22,11 +22,25 @@ Amazon Web Services:
   - [SageMaker](https://aws.amazon.com/sagemaker/)
 
 ### Files & Notebooks
-- feature_generation_functions.py:  Contains modules and functions used to generate text and numerical features for model. (273 lines)
-- pickle_functions.py:  Contains modules and functions used to read/write data from/to pickle files hosted in AWS s3 bucket. (60 lines)
-- feature_generation.ipynb:  Python 3 notebook used to run functions from feature_generation_functions.py and pickle_functions.py.  Generates features, pickles data frames, and sends to s3 bucket. (160 lines)
-- model_functions.py: Contains modules and functions to generate and test Naive Bayes and SVM models; run metrics on models. (226 lines)
-- stepping_stones:
-  - NB_iter1
+#### Feature Generation
+- [feature_generation_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/feature_generation_functions.py):  Contains modules and functions used to generate text and numerical features for model. (273 lines)
+- [feature_generation.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/feature_generation.ipynb):  Python 3 notebook used to run functions from feature_generation_functions.py and pickle_functions.py.  Generates features, pickles data frames, and sends to s3 bucket. (160 lines)
+#### Helper Functions
+- [model_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/model_functions.py): Contains modules and functions to generate and test Naive Bayes and SVM models; run metrics on models. (226 lines)
+- [pickle_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/pickle_functions.py):  Contains modules and functions used to read/write data from/to pickle files hosted in AWS s3 bucket. (60 lines)
+#### Intermediate Models
+- [Stepping_Stones](https://github.com/natashamathur/no_hate_all_love/tree/master/stepping_stones): Iterations of each model that was built prior to the final model design and assessment
+  - [Initial_Models_Exploration.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/Initial_Models_Exploration.ipynb) (1697 lines)
+  - [NB_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter2.ipynb) (726 lines)
+  - [NB_iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter3.ipynb) (626 lines)
+  - [NB_iter4.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter4.ipynb) (865 lines)
+  - [SVM_iter1.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter1.ipynb) (657 lines)
+  - [SVM_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter2.ipynb) (691 lines)
+  - [SVM iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter3.ipynb) (644 lines)
+#### Final Models
+- [NB_final.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/NB_final.ipynb) Naive Bayes Model (698 lines)
+- [SVM_final.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/SVM_final.ipynb) Support Vector Machines Model (1818 lines)
+- [neural_network.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/neural_network.ipynb) Two Layer Neural Network (536 lines)
+
 
 If there are any issues opening a notebook, please enter the link at the following site: https://nbviewer.jupyter.org/
