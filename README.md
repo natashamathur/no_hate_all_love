@@ -31,9 +31,9 @@ Amazon Web Services:
 #### Intermediate Models
 - [Stepping_Stones](https://github.com/natashamathur/no_hate_all_love/tree/master/stepping_stones): Iterations of each model that was built prior to the final model design and assessment
   - [Initial_Models_Exploration.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/Initial_Models_Exploration.ipynb) (1697 lines)
-  - [NB_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter2.ipynb) (726 lines)
-  - [NB_iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter3.ipynb) (626 lines)
-  - [NB_iter4.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter4.ipynb) (865 lines)
+  - [NB_iter1.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter2.ipynb) (726 lines)
+  - [NB_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter3.ipynb) (626 lines)
+  - [NB_iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/NB_iter4.ipynb) (865 lines)
   - [SVM_iter1.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter1.ipynb) (657 lines)
   - [SVM_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter2.ipynb) (691 lines)
   - [SVM iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter3.ipynb) (644 lines)
