@@ -464,76 +464,74 @@ class LSTMModel(nn.Module):
 
 def main(filepath="jigsaw_toxic/"):
 
-    # df = load_label(filepath)
-    #
-    # df['cleaned_no_stem'] = df["comment_text"].apply(tokenizer,args=(stops,None,False),)
-    #
-    # rebalance_dict = {0: 35, 1: 50, 2: 60, 3: 65, 4: .75, 5: 'random'}
-    #
-    # data_proportions = [0.2, 0.3, 0.4, 0.5, 0.6, 0.75]
-    #
+    df = load_label(filepath)
+
+    df['cleaned_no_stem'] = df["comment_text"].apply(tokenizer,args=(stops,None,False),)
+
+    rebalance_dict = {0: 35, 1: 50, 2: 60, 3: 65, 4: .75, 5: 'random'}
+
+    data_proportions = [0.2, 0.3, 0.4, 0.5, 0.6, 0.75]
+
     test_ratio = 0.2
-    #
-    # for p, proportion in enumerate(data_proportions):
-    #
-    #     train_sample, val_set, test_set = get_samples(df, proportion=proportion, train_test_ratio=(1-test_ratio))
-    #
-    #     prepared_35, prepared_50, prepared_60, prepared_65, prepared_75, random_df = rebalance_data(train_sample)
-    #
-        # for i, p_df in enumerate([prepared_35, prepared_50, prepared_60, prepared_65, prepared_75, random_df]):
-        #     model_name= f'{int(data_proportions[p]*100)}pct_model_{rebalance_dict[i]}toxic'
+
+    for p, proportion in enumerate(data_proportions):
+
+        train_sample, val_set, test_set = get_samples(df, proportion=proportion, train_test_ratio=(1-test_ratio))
+
+        prepared_35, prepared_50, prepared_60, prepared_65, prepared_75, random_df = rebalance_data(train_sample)
+
+        for i, p_df in enumerate([prepared_35, prepared_50, prepared_60, prepared_65, prepared_75, random_df]):
+            model_name= f'{int(data_proportions[p]*100)}pct_model_{rebalance_dict[i]}toxic'
+
+            # Optional pickled df functionality
         #     val_set.to_pickle("jigsaw_toxic/" + model_name + "_val.pkl")
     #         test_set.to_pickle("jigsaw_toxic/" + model_name + "_test.pkl")
     #         p_df.to_pickle("jigsaw_toxic/" + model_name + "_train.pkl")
 
-    filelist = []
-    for file in os.listdir(filepath):
-        if file.endswith(".pkl"):
-            if "_test" not in file:
-                filelist.append(file)
+    # filelist = []
+    # for file in os.listdir(filepath):
+    #     if file.endswith(".pkl"):
+    #         if "_test" not in file:
+    #             filelist.append(file)
 
-    filelist.sort()
+    # filelist.sort()
 
-    train_list, val_list = [], []
-    for x in filelist:
-        (train_list if "_train" in x else val_list).append(x)
+    # train_list, val_list = [], []
+    # for x in filelist:
+    #     (train_list if "_train" in x else val_list).append(x)
 
-    for p_df, val_set in zip(train_list, val_list):
-        model_name = os.path.splitext(p_df)[0].replace("_train", "")
-        p_df = pd.read_pickle(filepath + p_df)
-        val_set = pd.read_pickle(filepath + val_set)
+            for p_df, val_set in zip(train_list, val_list):
+                # model_name = os.path.splitext(p_df)[0].replace("_train", "")
+                p_df = pd.read_pickle(filepath + p_df)
+                val_set = pd.read_pickle(filepath + val_set)
 
-        print(f"{model_name}:")
-        X_train = p_df.drop('label', axis=1)
-        y_train = p_df['label']
-        test_sample = val_set.sample( n=math.ceil(len(X_train)*test_ratio), random_state=1008 )
-        # test_sample = val_set.sample(frac=test_ratio, replace=True)
-        X_test = test_sample.drop('label', axis=1)
-        y_test = test_sample['label']
+                print(f"{model_name}:")
+                X_train = p_df.drop('label', axis=1)
+                y_train = p_df['label']
+                test_sample = val_set.sample( n=math.ceil(len(X_train)*test_ratio), random_state=1008 )
+                # test_sample = val_set.sample(frac=test_ratio, replace=True)
+                X_test = test_sample.drop('label', axis=1)
+                y_test = test_sample['label']
 
-        lstm_model = LSTMModel(X_train, y_train,
-                                  X_test, y_test, hidden_dim=50,
-                                  num_layers=1, embed_dim=50, batch_size=1,
-                                  dropout=0, num_classes=2)
-        if USE_CUDA:
-            torch.cuda.init()
-            lstm_model = lstm_model.cuda()
+                lstm_model = LSTMModel(X_train, y_train,
+                                          X_test, y_test, hidden_dim=50,
+                                          num_layers=1, embed_dim=50, batch_size=1,
+                                          dropout=0, num_classes=2)
+                if USE_CUDA:
+                    torch.cuda.init()
+                    lstm_model = lstm_model.cuda()
 
-        lstm_model.train()
+                lstm_model.train()
 
-        NUM_EPOCHS = 6
-        hist_lstm = np.zeros(NUM_EPOCHS)
+                NUM_EPOCHS = 6
+                hist_lstm = np.zeros(NUM_EPOCHS)
 
-        _, model_state_dict = lstm_model.run_model(
-            y_train, X_test, y_test, NUM_EPOCHS, hist_lstm, text_col='cleaned_no_stem',
-            savestate=model_name)
+                _, model_state_dict = lstm_model.run_model(
+                    y_train, X_test, y_test, NUM_EPOCHS, hist_lstm, text_col='cleaned_no_stem',
+                    savestate=model_name)
 
-        print(model_state_dict)
-        # results dfs pickled after every epoch, can scp .pkl files and check metrics locally
-        # metric_dict = get_metrics(results, detailed=True,
-        #             label_col="y_true", score_col="predicted_score")
-        #
-        # metric_dict.to_pickle(model_name+"_metric_dict.pkl")
+                print(model_state_dict)
+
 
 def reload_model(state_file, args, kwargs):
     lstm_instance = LSTMModel(*args, **kwargs)
@@ -560,11 +558,11 @@ if __name__ == '__main__':
     except Exception as e:
         sys.exit("exec_lstm error: Please review arguments passed: {}".format(e))
 
-    # try:
-    if a.infile:
-        filename = a.infile
-        main(filename)
-    # except Exception as e:
-    #     # check for any exceptions not covered above
-    #     sys.exit("exec_lstm error: An unexpected error occurred when processing "
-    #         "your request: {}".format(e))
+    try:
+        if a.infile:
+            filename = a.infile
+            main(filename)
+    except Exception as e:
+        # check for any exceptions not covered above
+        sys.exit("exec_lstm error: An unexpected error occurred when processing "
+            "your request: {}".format(e))
