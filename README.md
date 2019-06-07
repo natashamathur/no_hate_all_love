@@ -30,7 +30,7 @@ Google Cloud Services:
 - [NB_final.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/NB_final.ipynb) Naive Bayes Model (698 lines)
 - [SVM_final.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/SVM_final.ipynb) Support Vector Machines Model (1818 lines)
 - [neural_network.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/neural_network.ipynb) Two Layer Neural Network (536 lines)
-- [final_lstm.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/final_lstm.ipynb) Three Layer Bi-Directional LSTM Recurrent Neural Network (7514 lines)
+- [final_lstm.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/final_lstm.ipynb) Three Layer Bidirectional Long Short-Term Memory Recurrent Neural Network (7514 lines)
 #### Feature Generation
 - [feature_generation_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/feature_generation_functions.py):  Contains modules and functions used to generate text and numerical features for model. (273 lines)
 - [feature_generation.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/feature_generation.ipynb):  Python 3 notebook used to run functions from feature_generation_functions.py and pickle_functions.py.  Generates features, pickles data frames, and sends to s3 bucket. (160 lines)
