@@ -60,6 +60,17 @@ def read_pickle(bucket_name, filename):
 
 
 def pickle_to_gcs(df, filename, bucket_name="no-hate", directory=None):
+    """
+    Pickle a dataframe to a specified file in a given Google Cloud Storage
+    bucket, optionally within a specified directory.
+
+    Arguments:
+        df: a pandas dataframe
+        filename: filename to write to in a bucket given
+        bucket_name: the bucket to write to
+        directory: The directory to write to
+
+    """
     pickle_buffer = io.BytesIO()
     fs = gcsfs.GCSFileSystem(project=project_id)
     df.to_pickle(filename)
@@ -74,9 +85,19 @@ def pickle_to_gcs(df, filename, bucket_name="no-hate", directory=None):
 
 
 def load_pickle_from_gcs(filename, bucket_name="no-hate",  directory=None):
+    """
+    Load a pickled dataframe from a specified file in a given Google Cloud
+    Storage bucket, optionally within a specified directory.
+
+    Arguments:
+        df: a pandas dataframe
+        filename: filename to write to in a bucket given
+        bucket_name: the bucket to write to
+        directory: The directory to write to
+    """
     fs = gcsfs.GCSFileSystem(project=project_id)
 
-    if not directory:
+    if directory:
         directory = directory + "/"
     else:
         directory = ""

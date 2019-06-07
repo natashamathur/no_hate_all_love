@@ -12,10 +12,11 @@ pip install --user torch
 pip install --user numpy
 pip install --user pandas
 
-# unzip jigsaw_toxic/train.csv.zip
+
 _now="$(date +'%m%d%y_%H%M')"
 _outfile="exec_lstm_output_$_now.txt"
-python3 jigsaw_toxic/exec_lstm.py --infile jigsaw_toxic/ >> $_outfile && echo "Done with exec_lstm.py"
+python3 jigsaw_toxic/exec_lstm.py --infile train.csv >> $_outfile && echo "Done with exec_lstm.py"
+# python3 jigsaw_toxic/exec_lstm.py --infile jigsaw_toxic/ >> $_outfile && echo "Done with exec_lstm.py"
 
 # deactivate
 

@@ -69,6 +69,10 @@ print(f"Using CUDA? {USE_CUDA} {device}")
 
 
 def load_label(filepath):
+    """
+    Import data from CSV and add binary label based on threshold of toxicity
+    rating
+    """
     df = pd.read_csv(filepath)
     df['label'] = df.target.apply(lambda x: 1 if x > 0.5 else 0)
     print(f"{filepath} loaded successfully!")
@@ -76,6 +80,9 @@ def load_label(filepath):
 
 
 def portion_data(df, ratio):
+    """
+    Split data in a pandas Dataframe into two portions based on a given ratio.
+    """
     msk = np.random.rand(len(df)) <= ratio
     set1_df = df[msk]
     set2_df = df[~msk]
@@ -83,6 +90,9 @@ def portion_data(df, ratio):
 
 
 def get_samples(df, proportion=0.2, train_test_ratio=0.8):
+    """
+    Sample data from pool of training data into train, validation, and test sets.
+    """
     print(f"Retrieving training samples at proportion {proportion}")
     train_set, val_set = portion_data(df, train_test_ratio)
     train_sample = train_set.sample(frac=proportion, replace=True, random_state=1008)
@@ -94,6 +104,10 @@ def get_samples(df, proportion=0.2, train_test_ratio=0.8):
 
 
 def rebalance_data(train_sample, rebalance_ratios=[0.35, 0.5, 0.6, 0.65, 0.75]):
+    """
+    Rebalance ratio of toxic comments in a training data set based on a given
+    list of toxicity ratios.
+    """
     toxic = train_sample[train_sample.label == 1]
     nontoxic = train_sample[train_sample.label == 0]
 
@@ -107,15 +121,15 @@ def rebalance_data(train_sample, rebalance_ratios=[0.35, 0.5, 0.6, 0.65, 0.75]):
         print(f"Rebalance Ratio: {toxic_ratio}, {DESIRED_TOXIC} toxic samples out of {TOTAL_SAMPLES}")
         DESIRED_NONTOXIC = int(TOTAL_SAMPLES - DESIRED_TOXIC)
         required_repeats = DESIRED_TOXIC // TOTAL_TOXIC
-        # rebalanced_df = pd.DataFrame(np.repeat(toxic.values,required_repeats,axis=0))
+
         rebalanced_df = toxic.iloc[np.repeat(np.arange(len(toxic)), required_repeats)]
 
         rebalanced_df = rebalanced_df.append(nontoxic.sample(n=DESIRED_NONTOXIC, random_state=1008))
         rebalanced_df = rebalanced_df.sample(frac=1, random_state=1008).reset_index(drop=True)
-        # print(rebalanced_df.head())
+
         all_rebalanced.append(rebalanced_df)
 
-    # random df
+    # random df to use as "control group"
     random_df = train_sample.sample(n=TOTAL_SAMPLES, random_state=1008)
 
     print(f"Rebalanced dfs created...")
@@ -125,8 +139,18 @@ def rebalance_data(train_sample, rebalance_ratios=[0.35, 0.5, 0.6, 0.65, 0.75]):
 
 
 
-def tokenizer(text, stop_ws=stops, stemmer=ps, str_output=True):
+def tokenizer(text, stop_ws=exl.stops, stemmer=None, str_output=False):
+    """
+    Tokenize text for conversion to deep learning word embeddings.
 
+    Arguments:
+        text: text string to be tokenized
+        stop_ws: a set of stopwords to remove from text. Default is augmented
+            NLTK stopwords (excluding a handful of preselected keyworrds).
+        stemmer: an instance of an NLTK stemmer instance to use for stemming,
+            or None. Default is None.
+        str_output: Whether to return a string (versus a list). Default is False.
+    """
     t = text.replace("-", " ").split(" ")
     t = [w.strip(string.punctuation) for w in t]
 
@@ -140,81 +164,6 @@ def tokenizer(text, stop_ws=stops, stemmer=ps, str_output=True):
         return ' '.join(t)
     else:
         return t
-
-
-
-def get_metrics(output, should_print=True, detailed = False, label_col="y_test", score_col="predicted"):
-    '''
-    This function returns the model's metrics.
-
-    '''
-    metrics = {}
-    targets = output[output[label_col] == 1]
-    nontargets = output[output[label_col] == 0]
-
-    dfs = [output, targets, nontargets]
-    labels = ["Overall", "Target", "Non-Target"]
-
-    for i in range(len(dfs)):
-
-        df, label = dfs[i], labels[i]
-        num_in_sample = df.shape[0]
-        if label == "Non-Target":
-            pos_label = 0
-        else:
-            pos_label = 1
-
-        metrics[label] = {}
-
-        accuracy = accuracy_score(df[label_col], df[score_col])
-        metrics[label]['Accuracy'] = accuracy
-
-        precision = precision_score(df[label_col], df[score_col], pos_label=pos_label)
-        metrics[label]['Precision'] = precision
-
-        recall = recall_score(df[label_col], df[score_col], pos_label=pos_label)
-        metrics[label]['Recall'] = recall
-
-        f1 = f1_score(df[label_col], df[score_col], pos_label=pos_label)
-        metrics[label]['F1'] = f1
-
-        if label == "Overall":
-            roc_auc = roc_auc_score(df[label_col], df[score_col])
-            metrics[label]['ROC_AUC'] = roc_auc
-
-        if should_print == True:
-            print("Group Size: {}".format(num_in_sample))
-            print("{} Accuracy: {}".format(label, accuracy))
-            print("{} Precision: {}".format(label, precision))
-            print("{} Recall: {}".format(label, recall))
-            print("{} F1 Score: {}".format(label, f1))
-            if label == "Overall":
-                print("ROC_AUC: {}".format(roc_auc))
-            print()
-
-    if detailed == True:
-
-        identities = output[output.identity_attack > .5]
-        obscenity = output[output.obscene > .5]
-        insults = output[output.insult > .5]
-        threats = output[output.threat > .5]
-
-        detail_dfs = [identities, obscenity, insults, threats]
-        detail_labels = ["Strong Identity", "Obscenity", "Insults", "Threats"]
-
-        for i in range(len(detail_dfs)):
-            df, label = detail_dfs[i], detail_labels[i]
-            num_in_sample = df.shape[0]
-            metrics[label] = {}
-
-            f1 = f1_score(df[label_col], df[score_col], pos_label=pos_label)
-            metrics[label]['F1'] = f1
-
-            if should_print == True:
-
-                print("{} Samples: {}\nF1 Score: {}".format(label, num_in_sample, f1))
-
-    return metrics
 
 
 class TextData:
@@ -246,6 +195,28 @@ class LSTMModel(nn.Module):
     def __init__(self, X_data, y_data, test_X, test_y, hidden_dim, batch_size=1,
                  embed_dim=6, weight_decay=0, optimizer_fcn='Adam',
                  learning_rate=1e-3, num_layers=2, dropout=0.05, num_classes=2):
+        """
+        Create a model based on given paramters.
+
+        Arguments:
+            X_data: pandas Dataframe containing training data features.
+            y_data: pandas Series containing training data labels
+            test_X: pandas Dataframe containing test data features.
+            test_y: pandas Series containing test data labels
+            hidden_dim: the number of hidden dimensions in the model
+            batch_size: the size of batches the model should expect.
+                Default is 1.
+            embed_dim: the number of embedding dimensions. Default is 6.
+            weight_decay: the amount of weight decay or regularization the
+                model optimizer should use. Default is 0.
+            optimizer_fcn: the model opimizer to employ. Default is 'Adam.'
+            learning_rate: the model optimizer learning rate. Default 1e-3.
+            num_layers: The number of layers the model should deploy. Default
+                is 2.
+            dropout: the amount of dropout a model instance should apply.
+                Default is 0.05.
+            num_classes: The number of classes to predict. Default is 1.
+        """
         super(LSTMModel, self).__init__()
         nn.Module.__init__(self)
         TextData.__init__(self, X_data)
@@ -286,7 +257,13 @@ class LSTMModel(nn.Module):
                                                  lr=self.learning_rate)
 
     def forward(self, input_seq):
+        """
+        Pass a single comments' input sequence (vector represntation) through
+        model layers.
 
+        Arguments:
+            input_seq: sentence reqpresentation (word-to-idx vector)
+        """
         embed_out = self.embedding(input_seq)
 
         lstm_out, (hn, cn) = self.lstm(embed_out)
@@ -297,6 +274,19 @@ class LSTMModel(nn.Module):
 
 
     def get_vectors(self, labels, text=None, text_col=None):
+        """
+        Create word embeddings from comments in train or test data based on a
+        model's word-to-index dictionary (created from training data)
+
+        Arguments:
+            labels: pandas Series containing text labels
+            text: panadas Dataframe containing text data column. Default is
+                None, indicating training data that will be pulled from model
+                attribute self.preprocessed_text()
+            text_col: the column in the dataframe containing text data for
+                modeling. Default is None, indicating training data as described
+                for `text` parameter.
+        """
         X = []
         if text is None:
             text = self.preprocessed_text
@@ -316,12 +306,10 @@ class LSTMModel(nn.Module):
 
     def classify(self, X_vec):
         '''
-        This function classifies documents into their categories.
-        docs are documents without labels.
+        Classify vector representations of comments into their predicted
+        classes.
         '''
         # pass forwrard w/o params --> get two items.
-        # first value is representing positive value
-        # second value is the negative value
         # bigger of the 2 should be the classification
 
         if USE_CUDA:
@@ -330,14 +318,8 @@ class LSTMModel(nn.Module):
         argmaxes = []
         for vec in X_vec:
             results = self.forward(vec.unsqueeze(0))
-#             print(results)
-#             print("as calced", results.size())
-#             print("view -1", results.view(-1))
-#             print(results.view(-1).size())
 
-#             values, indices = torch.max(results.view(-1, results.size()[-1]).squeeze(0), 0)
             indices = torch.argmax(results.view(-1), dim=0)
-#             print(indices)
         # indicies works cleanest --> for multiclass, look up in self.label_to_idx
             argmaxes.append(indices.item())
 
@@ -347,11 +329,16 @@ class LSTMModel(nn.Module):
 
     def evaluate_classifier(self, validation_X, validation_y, text_col=None):
         '''
-        This function evaluates the data with the current model.
-        data contains both documents and labels.
-        It calls classify() to make predictions,
-        and compares with the correct labels to return
-        the model accuracy on "data".
+        This function evaluates the model's performance on previously unseen
+        data. It calls classify() to make predictions, and compares with the
+        correct labels, returning test data and each sample's predictions in a
+        pandas Dataframe.
+
+        Arguments:
+            validation_X: word embedding vectors on which to make predictions
+            validation_y: true labels for comments represented by  validation_X
+                vectors
+            text_col:
         '''
         X_vec, y_vec = self.get_vectors(validation_y, text=validation_X,
                                         text_col='cleaned_no_stem')
@@ -381,7 +368,26 @@ class LSTMModel(nn.Module):
         return f1, results_df
 
 
-    def run_model(self, y_data, test_X, test_y, num_epochs, loss_record, text_col=None, savestate=False):
+    def run_model(self, y_data, test_X, test_y, num_epochs, loss_record, text_col=None, savestate=None):
+        """
+        Train and evaluate model for a given number of epochs, recording loss
+        incrementally, returning a pandas Dataframe of validation data and their
+        predictions, and an OrderedDict representing the best model's state for
+        future reloading.
+
+        Arguments:
+            y_data: pandas Series containing training data labels
+            test_X: pandas Dataframe containing test data features.
+            test_y: pandas Series containing test data labels
+            num_epochs: the number of epochs for which to train models
+            loss_record: a dictionary in which to record loss from each epoch.
+            text_col: the column in pandas df containing text data. Default is
+                None.
+            savestate: (optional) Identifying prefix for model to append to
+                name of a file in which to state of the model just after the
+                best-performing epoch for future re-loading of the model.
+                Default is None, indicating model state will not be saved.
+        """
         results = []
         X_vec, y_vec = self.get_vectors(y_data, text=None)
 
@@ -423,6 +429,7 @@ class LSTMModel(nn.Module):
             print_at = 2
             if num_epochs in  thresholds.keys():
                 print_at = thresholds[num_epochs]
+
             # print results for every few epochs
             if epoch % print_at == 0:
                 print(f"Epoch {epoch}, Negative Log Linear Loss: {loss.item()}")
@@ -442,8 +449,10 @@ class LSTMModel(nn.Module):
 
             model_f1, results_df = self.evaluate_classifier(test_X, test_y, text_col=text_col)
             print(f"Epoch {epoch} F1 Score: {model_f1}")
+
             # pickle results df after every epoch
-            results_df.to_pickle(savestate + f'_epoch{epoch}.pkl')
+            if savestate:
+                results_df.to_pickle(savestate + f'_epoch{epoch}.pkl')
 
             best_model_state_dict = None
 
@@ -462,7 +471,17 @@ class LSTMModel(nn.Module):
 
 
 
-def main(filepath="jigsaw_toxic/"):
+def main(filepath):
+    """
+    Create and test models on increasingly larger proportions of data and
+    varying levels of toxic comment volume.
+
+    Arguments:
+        filepath: CSV from which to pull training samples (Note: when using
+        pre-pickled Dataframe functionality, filepath should be the directory
+        in which .pkl files of rebalanced data are stored)
+
+    """
 
     df = load_label(filepath)
 
@@ -483,7 +502,7 @@ def main(filepath="jigsaw_toxic/"):
         for i, p_df in enumerate([prepared_35, prepared_50, prepared_60, prepared_65, prepared_75, random_df]):
             model_name= f'{int(data_proportions[p]*100)}pct_model_{rebalance_dict[i]}toxic'
 
-            # Optional pickled df functionality
+            # Optional pickled, previously rebalanced df functionality
         #     val_set.to_pickle("jigsaw_toxic/" + model_name + "_val.pkl")
     #         test_set.to_pickle("jigsaw_toxic/" + model_name + "_test.pkl")
     #         p_df.to_pickle("jigsaw_toxic/" + model_name + "_train.pkl")
