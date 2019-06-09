@@ -32,6 +32,7 @@ Amazon Web Services:
 #### Helper Functions
 - [model_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/model_functions.py): Contains modules and functions to generate and test Naive Bayes and SVM models; run metrics on models. (226 lines)
 - [pickle_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/pickle_functions.py):  Contains modules and functions used to read/write data from/to pickle files hosted in AWS s3 bucket. (60 lines)
+- [exploration/exploration_functions.py](https://github.com/natashamathur/no_hate_all_love/blob/master/exploration/exploration_functions.py): Contains modules and functions used to explore dataset. (103 lines)
 #### Intermediate Models
 - [Stepping_Stones](https://github.com/natashamathur/no_hate_all_love/tree/master/stepping_stones): Iterations of each model that was built prior to the final model design and assessment
   - [Initial_Models_Exploration.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/Initial_Models_Exploration.ipynb) (1697 lines)
@@ -41,9 +42,8 @@ Amazon Web Services:
   - [SVM_iter1.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter1.ipynb) (657 lines)
   - [SVM_iter2.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter2.ipynb) (691 lines)
   - [SVM iter3.ipynb](https://github.com/natashamathur/no_hate_all_love/blob/master/stepping_stones/SVM_iter3.ipynb) (644 lines)
-
+#### Intermediate Models
+- [](): (previously written
 
 
 If there are any issues opening a notebook, please enter the link at the following site: https://nbviewer.jupyter.org/
-
-#### [Final Report](https://github.com/natashamathur/no_hate_all_love/blob/master/A%20Machine%20Learning%20Approach%20to%20Intervening%20on%20Toxic%20Comments%20in%20Online%20Forums.pdf)
