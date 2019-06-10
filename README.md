@@ -53,4 +53,4 @@ Google Cloud Services:
 
 If there are any issues opening a notebook, please enter the link into the renderer at the following site: https://nbviewer.jupyter.org/
 
-#### [Final Report](https://github.com/natashamathur/no_hate_all_love/blob/master/A%20Machine%20Learning%20Approach%20to%20Intervening%20on%20Toxic%20Comments%20in%20Online%20Forums.pdf)
+
